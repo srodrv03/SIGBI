@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900|Material+Icons" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/vuetify/dist/vuetify.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css"
+    integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous" />
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui" />
+  <link rel="stylesheet" type="text/css" href="CSS.css" />
+  <style type="text/css">
+    header {
+      background-color: white;
+      text-align: center;
+    }
+
+    .elevation {
+      border-radius: 30px;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="app">
+    <v-app id="inspire">
+      <v-content>
+        <v-parallax height="800" src="https://i.imgur.com/xZdpvg8.jpg">
+          <v-layout align-center column justify-center>
+            <h1 class="display-3 font-weight-bold">
+              <span style="color: black">EduNotes</span>
+            </h1>
+          </v-layout>
+
+          <v-content>
+            <v-container grid-list-md text-xs-center>
+              <v-layout row wrap fill-height>
+                <v-flex d-flex>
+                  <v-card flat class="elevation">
+                    <v-toolbar flat class="white--text" color="#907A55">
+                      <v-toolbar-title>Login in</v-toolbar-title>
+                    </v-toolbar>
+                    <v-card-text>
+                      <v-form @submit.prevent= "sendLogin">
+                        <v-text-field prepend-icon="person" name="login" label="Login" type="text" v-model = "loginName"></v-text-field>
+                        <v-text-field prepend-icon="lock" name="password" label="Password" id="password"
+                          type="password" v-model = "loginPass">
+                        </v-text-field>
+                      </v-form>
+                    </v-card-text>
+                    <v-toolbar flat class="white--text" color="white"></v-toolbar>
+                    <v-card-actions>
+                      <v-spacer></v-spacer>
+                      <v-btn round depressed class="white--text" color="#907A55" v-on:click = "sendLogin">Login in</v-btn>
+                    </v-card-actions>
+                  </v-card>
+                  <v-card flat class="elevation">
+                    <v-toolbar flat class="white--text" color="#907A55">
+                      <v-toolbar-title>Sing up</v-toolbar-title>
+                      <v-spacer></v-spacer>
+                    </v-toolbar>
+                    <v-card-text>
+                      <v-form>
+                        <v-text-field prepend-icon="alternate_email" name="e-mail" label="e-mail" type="text" v-model = "email">
+                        </v-text-field>
+                        <v-text-field prepend-icon="person" name="login" label="Login" type="text" v-model = "signName"></v-text-field>
+                        <v-text-field prepend-icon="lock" name="password" label="Password" id="password"
+                          type="password" v-model = "signPass">
+                        </v-text-field>
+                      </v-form>
+                    </v-card-text>
+                    <v-card-actions>
+                      <v-spacer></v-spacer>
+                      <v-btn round depressed class="white--text" color="#907A55" v-on:click = "sendSignUp">Sign up</v-btn>
+                    </v-card-actions>
+                  </v-card>
+                </v-flex>
+              </v-layout>
+            </v-container>
+          </v-content>
+        </v-parallax>
+
+        <v-footer height="auto" fixed class="white--text" color="#907A55">
+          <v-layout justify-center row wrap>
+            <v-card-text class="text-md-center">Sitio web elaborado por Andrea F., Raquel C., Alexia C. y Laura
+              C.</v-card-text>
+
+            <v-flex color="#907A55" py-3 text-xs-center white--text xs12>
+              &copy;2019 — <strong>EduNotes</strong>
+            </v-flex>
+          </v-layout>
+        </v-footer>
+      </v-content>
+    </v-app>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vuetify/dist/vuetify.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vue-resource@1.5.1"></script>
+  <script src="./script.js"></script>
+</body>
+
+</html>
