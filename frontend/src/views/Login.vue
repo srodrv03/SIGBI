@@ -6,7 +6,7 @@
       </v-col>
 
       <v-col class="mb-4">
-        <h1 class="display-2 font-weight-bold mb-3">Bienvenido a i-NVESTER</h1>
+        <h1 class="display-2 font-weight-bold mb-3">Bienvenido a </h1>
       </v-col>
       
       <v-col class="mb-5" cols="12">
@@ -85,7 +85,7 @@ export default {
           pass: this.password
         }
         axios
-          .post("http://localhost:3000/usuarios/login", userData)
+          .post("http://localhost:3000/login", userData)
           .then(
             response => {
               if(Object.prototype.hasOwnProperty.call(response.data,"error")){

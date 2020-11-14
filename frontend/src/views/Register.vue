@@ -11,7 +11,7 @@
       </v-col>
 
       <v-col class="mb-4" cols="12">
-        <h1 class="display-2 font-weight-bold mb-3">Bienvenido a i-NVESTER</h1>
+        <h1 class="display-2 font-weight-bold mb-3">Bienvenido a </h1>
       </v-col>
 
       <v-col cols="12">
@@ -36,11 +36,11 @@
             </v-row>
             <v-row>
               <v-text-field
-                name="apellidos"
-                v-model="apellidos"
-                label="Apellidos"
-                id="apellidos"
-                type="apellidos"
+                name="Edad"
+                v-model="edad"
+                label="Edad"
+                id="edad"
+                type="edad"
                 required
                 dark
                 prepend-icon="mdi-account-circle"
@@ -124,7 +124,7 @@ export default {
 
   data: () => ({
     nombre: "",
-    apellidos: "",
+    edad: "",
     email: "",
     visibleAlerta: false,
     password: "",
@@ -136,38 +136,24 @@ export default {
   }),
   methods: {
     confirmaRegistro() {
-      if (this.nombre != "" && this.apellidos != "") {
+      if (this.nombre != "" && this.edad != "") {
         const params = {
           nombre: this.nombre,
-          apellidos: this.apellidos,
+          edad: this.edad,
           email: this.email,
           pass: this.password,
           
         };
-        console.log('entra')
         axios.post("http://localhost:3000/registro", params).then(
             response => {
-              if (
-                response.body &&
-                response.body.length &&
-                response.body[0].message != "Error"
-              ) {
-                console.log("Correcto")
-              } else {
-                response.body = [
-                  {
-                    name:
-                      "¡Ups! ha habido un error",
-                    year: "--"
-                  }
-                ];
-                
-              }
-            },
-            response => {
-              alert("Ha habido un error en el envío: " + response.body);
+              if (Object.prototype.hasOwnProperty.call(response.data, "error")) {
+              console.log(response)
+              this.visibleAlerta = true;
+            } else {
+              this.$router.push('Login')
             }
-          );
+          },
+        )
         
       }
     }
