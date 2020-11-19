@@ -7,13 +7,46 @@ app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-
 const neo4j = require("neo4j-driver");
 const driver = neo4j.driver(
   "bolt://localhost:7687",
-  neo4j.auth.basic("neo4j", "1234")
+  neo4j.auth.basic("neo4j", "1234"), { disableLosslessIntegers: true }
 );
 const session = driver.session();
+
+var Car = module.exports = function Car(_node) {
+  this._node = _node;
+}
+
+
+
+
+app.post("/allCars", function(req,res){
+respuesta = {
+   cars:[]
+}
+//session.run('MATCH (c:Car) return c limit 10000')
+session.run('MATCH (c:Car)-[]-(t:Traccion),(c:Car)-[]-(y:Tamaño),(c:Car)-[]-(b:Brand),(c:Car)-[]-(u:Transmision),(c:Car)-[]-(p:Puerta) return c,t.name,y.name,b.name,u.name,p.numero limit 10')
+  .then(results => {
+    results.records.forEach(function(record){
+      
+      record._fields[0].properties["traccion"] = record._fields[1]
+      record._fields[0].properties["tamaño"] = record._fields[2]
+      record._fields[0].properties["marca"] = record._fields[3]
+      record._fields[0].properties["transmision"] = record._fields[4]
+      record._fields[0].properties["puertas"] = record._fields[5]
+      respuesta.cars.push(record._fields[0].properties)
+      
+    })
+
+    res.json(respuesta)
+  })
+  .catch(error => {
+    console.log(error);
+    driver.close()
+  })
+}),
+
 app.post("/registro", function (req, res) {
   var nombre = req.body.nombre;
   var edad = parseInt(req.body.edad);
@@ -65,6 +98,21 @@ app.post("/login", function (req, res) {
     })
 });
 
+app.post("/like", function(req,res){
+  var email = req.body.email
+  var id =req.body.id
+  session.run('MATCH (u:Usuario{email:"'+email+'"}),(c:Car{id:"'+id+'"}) MERGE (u)-[r:LIKES]->(c)')
+  .then(results => {
+    if (results.records.length != 0) {
+
+      res.json({ error: "No se encuentra" })
+    }
+    else { 
+      res.json({ correcto: "Relacion creada correctamente" })
+    }
+  })
+
+})
 
 app.listen(port, function () {
   console.log("Example app listening on port " + 3000);
