@@ -3,7 +3,7 @@
     <v-row class="text-center">
       <v-col cols="12">
         <v-img
-          :src="require('../assets/logo.svg')"
+          :src="require('../assets/LogoPrincipal.png')"
           class="my-3"
           contain
           height="200"
@@ -11,7 +11,9 @@
       </v-col>
 
       <v-col class="mb-4" cols="12">
-        <h1 class="display-2 font-weight-bold mb-3">Bienvenido a </h1>
+        <h1 class="display-2 font-weight-bold mb-3">
+          Bienvenido a YourBestCar
+        </h1>
       </v-col>
 
       <v-col cols="12">
@@ -130,9 +132,9 @@ export default {
     password: "",
     password1: "",
     emailRules: [
-      v => !!v || "El e-mail es necesario.",
-      v => /.+@.+\..+/.test(v) || "E-mail must be valid"
-    ]
+      (v) => !!v || "El e-mail es necesario.",
+      (v) => /.+@.+\..+/.test(v) || "E-mail must be valid",
+    ],
   }),
   methods: {
     confirmaRegistro() {
@@ -142,21 +144,19 @@ export default {
           edad: this.edad,
           email: this.email,
           pass: this.password,
-          
         };
-        axios.post("http://localhost:3000/registro", params).then(
-            response => {
-              if (Object.prototype.hasOwnProperty.call(response.data, "error")) {
-              console.log(response)
+        axios
+          .post("http://localhost:3000/registro", params)
+          .then((response) => {
+            if (Object.prototype.hasOwnProperty.call(response.data, "error")) {
+              console.log(response);
               this.visibleAlerta = true;
             } else {
-              this.$router.push('Login')
+              this.$router.push("Login");
             }
-          },
-        )
-        
+          });
       }
-    }
-  }
+    },
+  },
 };
 </script>

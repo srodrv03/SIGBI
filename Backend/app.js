@@ -21,57 +21,57 @@ var Car = module.exports = function Car(_node) {
 
 
 
-app.post("/allCars", function(req,res){
-respuesta = {
-   cars:[]
-}
-//session.run('MATCH (c:Car) return c limit 10000')
-session.run('MATCH (c:Car)-[]-(t:Traccion),(c:Car)-[]-(y:Tamaño),(c:Car)-[]-(b:Brand),(c:Car)-[]-(u:Transmision),(c:Car)-[]-(p:Puerta) return c,t.name,y.name,b.name,u.name,p.numero limit 10')
-  .then(results => {
-    results.records.forEach(function(record){
-      
-      record._fields[0].properties["traccion"] = record._fields[1]
-      record._fields[0].properties["tamaño"] = record._fields[2]
-      record._fields[0].properties["marca"] = record._fields[3]
-      record._fields[0].properties["transmision"] = record._fields[4]
-      record._fields[0].properties["puertas"] = record._fields[5]
-      respuesta.cars.push(record._fields[0].properties)
-      
-    })
+app.post("/allCars", function (req, res) {
+  respuesta = {
+    cars: []
+  }
+  //session.run('MATCH (c:Car) return c limit 10000')
+  session.run('MATCH (c:Car)-[]-(t:Traccion),(c:Car)-[]-(y:Tamaño),(c:Car)-[]-(b:Brand),(c:Car)-[]-(u:Transmision),(c:Car)-[]-(p:Puerta) return c,t.name,y.name,b.name,u.name,p.numero ')
+    .then(async results => {
 
-    res.json(respuesta)
-  })
-  .catch(error => {
-    console.log(error);
-    driver.close()
-  })
-}),
+      results.records.forEach(function (record) {
 
-app.post("/registro", function (req, res) {
-  var nombre = req.body.nombre;
-  var edad = parseInt(req.body.edad);
-  var email = req.body.email;
-  var pass = req.body.pass;
-  var pepe = 'prueba'
-  session.run('MATCH (user:Usuario {email:"' + email + '"}) RETURN user')
-    .then(results => {
-      if (results.records.length != 0) {
+        record._fields[0].properties["traccion"] = record._fields[1]
+        record._fields[0].properties["tamaño"] = record._fields[2]
+        record._fields[0].properties["marca"] = record._fields[3]
+        record._fields[0].properties["transmision"] = record._fields[4]
+        record._fields[0].properties["puertas"] = record._fields[5]
+        respuesta.cars.push(record._fields[0].properties)
 
-        res.json({ error: "El usuario ya estaba añadido" })
-      }
-      else {
-        console.log("crea")
-        session.run('CREATE (user:Usuario {name: "' + nombre + '" , email: "' + email + '" , pass: "' + pass + '"  , edad: ' + edad + '    })')
-          .then(results => {
-            res.json({ correcto: "Usuario añadido correctamente" })
-          })
-      }
+      })
+
+      res.json(respuesta)
     })
     .catch(error => {
       console.log(error);
       driver.close()
     })
-});
+}),
+
+  app.post("/registro", function (req, res) {
+    var nombre = req.body.nombre;
+    var edad = parseInt(req.body.edad);
+    var email = req.body.email;
+    var pass = req.body.pass;
+    var pepe = 'prueba'
+    session.run('MATCH (user:Usuario {email:"' + email + '"}) RETURN user')
+      .then(results => {
+        if (results.records.length != 0) {
+
+          res.json({ error: "El usuario ya estaba añadido" })
+        }
+        else {
+          session.run('CREATE (user:Usuario {name: "' + nombre + '" , email: "' + email + '" , pass: "' + pass + '"  , edad: ' + edad + '    })')
+            .then(results => {
+              res.json({ correcto: "Usuario añadido correctamente" })
+            })
+        }
+      })
+      .catch(error => {
+        console.log(error);
+        driver.close()
+      })
+  });
 app.post("/login", function (req, res) {
   var email = req.body.email;
   var pass = req.body.pass;
@@ -93,24 +93,139 @@ app.post("/login", function (req, res) {
     })
     .catch(error => {
       console.log(error);
-      res.json({ error: err })
+      res.json({ error })
+      driver.close()
+    })
+});
+app.post("/edad", function (req, res) {
+  respuesta = {
+    cars: []
+  }
+  var email = req.body.email;
+
+  session.run('MATCH (user:Usuario {email:"' + email + '"}) RETURN user.edad')
+    .then(async results => {
+      var edad = results.records[0]._fields[0]
+
+      if (edad <= 28) {
+        session.run('MATCH (c:Car)-[]-(t:Traccion),(c:Car)-[]-(y:Tamaño),(c:Car)-[]-(b:Brand),(c:Car)-[]-(u:Transmision),(c:Car)-[]-(p:Puerta) where (c.cv < 200 and p.numero= 2 and c.year>2000 and  y.name<>"Large") return c,t.name,y.name,b.name,u.name,p.numero')
+          .then(async results => {
+
+            results.records.forEach(function (record) {
+
+              record._fields[0].properties["traccion"] = record._fields[1]
+              record._fields[0].properties["tamaño"] = record._fields[2]
+              record._fields[0].properties["marca"] = record._fields[3]
+              record._fields[0].properties["transmision"] = record._fields[4]
+              record._fields[0].properties["puertas"] = record._fields[5]
+              respuesta.cars.push(record._fields[0].properties)
+
+            })
+
+            res.json(respuesta)
+          })
+
+      } else if (edad > 28 && edad <= 37) {
+        session.run('MATCH (c:Car)-[]-(t:Traccion),(c:Car)-[]-(y:Tamaño),(c:Car)-[]-(b:Brand),(c:Car)-[]-(u:Transmision),(c:Car)-[]-(p:Puerta) where (c.cv > 150 and c.cv < 300 and t.name<>"front wheel drive" and y.name<>"Compact") return c,t.name,y.name,b.name,u.name,p.numero')
+          .then(async results => {
+
+            results.records.forEach(function (record) {
+
+              record._fields[0].properties["traccion"] = record._fields[1]
+              record._fields[0].properties["tamaño"] = record._fields[2]
+              record._fields[0].properties["marca"] = record._fields[3]
+              record._fields[0].properties["transmision"] = record._fields[4]
+              record._fields[0].properties["puertas"] = record._fields[5]
+              respuesta.cars.push(record._fields[0].properties)
+
+            })
+
+            res.json(respuesta)
+          })
+
+      } else if (edad > 38 && edad <= 60) {
+        session.run('MATCH (c:Car)-[]-(t:Traccion),(c:Car)-[]-(y:Tamaño),(c:Car)-[]-(b:Brand),(c:Car)-[]-(u:Transmision),(c:Car)-[]-(p:Puerta) where (c.cv > 150 and c.cv < 300 and  y.name="Large") return c,t.name,y.name,b.name,u.name,p.numero')
+          .then(async results => {
+
+            results.records.forEach(function (record) {
+
+              record._fields[0].properties["traccion"] = record._fields[1]
+              record._fields[0].properties["tamaño"] = record._fields[2]
+              record._fields[0].properties["marca"] = record._fields[3]
+              record._fields[0].properties["transmision"] = record._fields[4]
+              record._fields[0].properties["puertas"] = record._fields[5]
+              respuesta.cars.push(record._fields[0].properties)
+
+            })
+
+            res.json(respuesta)
+          })
+
+      } else if (edad > 60) {
+        session.run('MATCH (c:Car)-[]-(t:Traccion),(c:Car)-[]-(y:Tamaño),(c:Car)-[]-(b:Brand),(c:Car)-[]-(u:Transmision),(c:Car)-[]-(p:Puerta) where (c.cv < 150 and u.name="AUTOMATIC") return c,t.name,y.name,b.name,u.name,p.numero')
+          .then(async results => {
+
+            results.records.forEach(function (record) {
+
+              record._fields[0].properties["traccion"] = record._fields[1]
+              record._fields[0].properties["tamaño"] = record._fields[2]
+              record._fields[0].properties["marca"] = record._fields[3]
+              record._fields[0].properties["transmision"] = record._fields[4]
+              record._fields[0].properties["puertas"] = record._fields[5]
+              respuesta.cars.push(record._fields[0].properties)
+
+            })
+
+            res.json(respuesta)
+          })
+      }
+    })
+    .catch(error => {
+      console.log(error);
+
       driver.close()
     })
 });
 
-app.post("/like", function(req,res){
-  var email = req.body.email
-  var id =req.body.id
-  session.run('MATCH (u:Usuario{email:"'+email+'"}),(c:Car{id:"'+id+'"}) MERGE (u)-[r:LIKES]->(c)')
-  .then(results => {
-    if (results.records.length != 0) {
+app.post("/recomendacion", function(req,res){
+  respuesta = {
+     cars:[]
+  }
+  var email = req.body.email;
+  session.run('MATCH (ser:Usuario{email:"' + email + '"})-[:LIKES]-(a:Car)-[:LIKES]-(pep:Usuario)  Match (pep)-[:LIKES]-(c:Car) where not exists((ser)-[:LIKES]-(c)) with c MATCH (c:Car)-[]-(t:Traccion),(c:Car)-[]-(y:Tamaño),(c:Car)-[]-(b:Brand),(c:Car)-[]-(u:Transmision),(c:Car)-[]-(p:Puerta) return distinct c,t.name,y.name,b.name,u.name,p.numero limit 47')
+    .then(results => {
+      results.records.forEach(function(record){
+        
+        record._fields[0].properties["traccion"] = record._fields[1]
+        record._fields[0].properties["tamaño"] = record._fields[2]
+        record._fields[0].properties["marca"] = record._fields[3]
+        record._fields[0].properties["transmision"] = record._fields[4]
+        record._fields[0].properties["puertas"] = record._fields[5]
+        respuesta.cars.push(record._fields[0].properties)
+        
+      })
+      
+      res.json(respuesta)
+    })
+    .catch(error => {
+      console.log(error);
+      driver.close()
+    })
+  }),
 
-      res.json({ error: "No se encuentra" })
-    }
-    else { 
-      res.json({ correcto: "Relacion creada correctamente" })
-    }
-  })
+app.post("/like", function (req, res) {
+  var email = req.body.email
+  var id = req.body.id
+  session.run('MATCH (u:Usuario{email:"' + email + '"}),(c:Car{id:"' + id + '"}) MERGE (u)-[r:LIKES]->(c)')
+    .then(results => {
+      if (results.records.length != 0) {
+
+        res.json({ error: "No se encuentra" })
+      }
+      else {
+        res.json({ correcto: "Relacion creada correctamente" })
+      }
+    })
 
 })
 
