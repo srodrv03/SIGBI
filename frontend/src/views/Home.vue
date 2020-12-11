@@ -124,6 +124,16 @@
         </v-card>
       </v-dialog>
     </v-row>
+    <v-btn
+            fab
+            fixed
+            bottom
+            left
+            color="white"
+            @click="atras()"
+          >
+            <v-icon>mdi-arrow-left</v-icon>
+          </v-btn>
   </v-container>
 </template>
 
@@ -137,7 +147,7 @@ export default {
     searchEdad: "",
     searchRecomendacion:"",
     tipo: "error",
-    deshabilitado: true,
+    deshabilitado: false,
     muestra: true,
     contador: 0,
     headers: [
@@ -153,7 +163,7 @@ export default {
       { text: "Puertas", filterable: false, value: "puertas" },
       { text: "Traccion", filterable: false, value: "traccion" },
       { text: "Cambio", filterable: false, value: "transmision" },
-      { text: "Tamaño", filterable: false, value: "tamaño" },
+      { text: "Tamaño", filterable: false, value: "tamano" },
       { text: "Precio", filterable: false, value: "precio" },
       {
         text: "Consumo ExtraUrbano",
@@ -209,6 +219,7 @@ export default {
         }
       });
     },
+
     obtenerAllCars() {
       this.contador = 0;
       
@@ -224,22 +235,27 @@ export default {
           this.obtenerEdadCars();
         });
     },
+
     likeItem(item) {
       this.idCambiado = item.id;
       this.dialog = true;
-     
     },
+    atras(){
+      this.muestra=true;
+    },
+
     likeItemEDAD(item) {
       this.contador += 1;
       this.idCambiado = item.id;
       this.dialog = true;
-    
     },
+
     confirmar() {
       const data = {
         email: this.emailUsuario,
         id: this.idCambiado,
       };
+      
       axios.post("http://localhost:3000/like", data).then((response) => {
         if (Object.prototype.hasOwnProperty.call(response.data, "error")) {
           console.log("error");

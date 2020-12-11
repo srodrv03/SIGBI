@@ -81,7 +81,7 @@
                   (v) => v == this.password || 'Tiene que ser iguales',
                 ]"
                 name="password1"
-                label="Repitir Contraseña"
+                label="Repetir Contraseña"
                 id="password-sin2"
                 type="password"
                 required
