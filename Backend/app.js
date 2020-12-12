@@ -190,7 +190,7 @@ app.post("/recomendacion", function (req, res) {
     cars: []
   }
   var email = req.body.email;
-  session.run('MATCH (ser:Usuario{email:"' + email + '"})-[:LIKES]-(a:Car)-[:LIKES]-(pep:Usuario)  Match (pep)-[:LIKES]-(c:Car) where not exists((ser)-[:LIKES]-(c)) with c MATCH (c:Car)-[]-(t:Traccion),(c:Car)-[]-(y:Tamaño),(c:Car)-[]-(b:Brand),(c:Car)-[]-(u:Transmision),(c:Car)-[]-(p:Puerta) return distinct c,t.name,y.name,b.name,u.name,p.numero limit 50')
+  session.run('MATCH (ser:Usuario{email:"' + email + '"})-[:LIKES]-(a:Car)-[:LIKES]-(pep:Usuario)  Match (pep)-[:LIKES]-(c:Car) where not exists((ser)-[:LIKES]-(c)) with c MATCH (c:Car)-[]-(t:Traccion),(c:Car)-[]-(y:Tamaño),(c:Car)-[]-(b:Brand),(c:Car)-[]-(u:Transmision),(c:Car)-[]-(p:Puerta) return distinct c,t.name,y.name,b.name,u.name,p.numero')
     .then(results => {
       results.records.forEach(function (record) {
 
@@ -306,11 +306,11 @@ app.post("/recomendacion", function (req, res) {
                       if ((results.records[0]._fields / results.records[3]._fields) > 0.55) {
                         for (var i = 0; i < respuesta.cars.length; i++) {
 
-                          if (respuesta.cars[i].tamano == "front wheel drive") {
+                          if (respuesta.cars[i].traccion == "front wheel drive") {
                             respuesta.cars.splice(i, 1)
                             i = 0
                           }
-                          if (respuesta.cars[i].tamano == "all wheel drive") {
+                          if (respuesta.cars[i].traccion == "all wheel drive") {
                             respuesta.cars.splice(i, 1)
                             i = -1
                           }
@@ -319,12 +319,12 @@ app.post("/recomendacion", function (req, res) {
                       } else if ((results.records[1]._fields / results.records[3]._fields) > 0.55) { //elimina rear y all
                         
                         for (var i = 0; i < respuesta.cars.length; i++) {
-
-                          if (respuesta.cars[i].tamano == "rear wheel drive") {
+                           
+                          if (respuesta.cars[i].traccion == "rear wheel drive") {
                             respuesta.cars.splice(i, 1)
                             i = 0
                           }
-                          if (respuesta.cars[i].tamano == "all wheel drive") {
+                          if (respuesta.cars[i].traccion == "all wheel drive") {
                             respuesta.cars.splice(i, 1)
                             i = -1
                           }
@@ -333,11 +333,11 @@ app.post("/recomendacion", function (req, res) {
                         console.log("Elimina Compact y Midsize")
                         for (var i = 0; i < respuesta.cars.length; i++) {
 
-                          if (respuesta.cars[i].tamano == "rear wheel drive") {
+                          if (respuesta.cars[i].traccion == "rear wheel drive") {
                             respuesta.cars.splice(i, 1)
                             i = 0
                           }
-                          if (respuesta.cars[i].tamano == "front wheel drive") {
+                          if (respuesta.cars[i].traccion == "front wheel drive") {
                             respuesta.cars.splice(i, 1)
                             i = -1
                           }
