@@ -147,7 +147,7 @@ export default {
     searchEdad: "",
     searchRecomendacion:"",
     tipo: "error",
-    deshabilitado: false,
+    deshabilitado: true,
     muestra: true,
     contador: 0,
     headers: [

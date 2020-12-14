@@ -23,7 +23,7 @@ app.post("/allCars", function (req, res) {
     cars: []
   }
   //session.run('MATCH (c:Car) return c limit 10000')
-  session.run('MATCH (c:Car)-[]-(t:Traccion),(c:Car)-[]-(y:Tamaño),(c:Car)-[]-(b:Brand),(c:Car)-[]-(u:Transmision),(c:Car)-[]-(p:Puerta) return c,t.name,y.name,b.name,u.name,p.numero ')
+  session.run('MATCH (c:Car)-[]-(t:Traccion),(c:Car)-[]-(y:Tamano),(c:Car)-[]-(b:Brand),(c:Car)-[]-(u:Transmision),(c:Car)-[]-(p:Puerta) return c,t.name,y.name,b.name,u.name,p.numero ')
     .then(async results => {
 
       results.records.forEach(function (record) {
@@ -106,7 +106,7 @@ app.post("/edad", function (req, res) {
       var edad = results.records[0]._fields[0]
 
       if (edad <= 28) {
-        session.run('MATCH (c:Car)-[]-(t:Traccion),(c:Car)-[]-(y:Tamaño),(c:Car)-[]-(b:Brand),(c:Car)-[]-(u:Transmision),(c:Car)-[]-(p:Puerta) where (c.cv < 200 and p.numero= 2 and c.year>2000 and  y.name<>"Large") return c,t.name,y.name,b.name,u.name,p.numero')
+        session.run('MATCH (c:Car)-[]-(t:Traccion),(c:Car)-[]-(y:Tamano),(c:Car)-[]-(b:Brand),(c:Car)-[]-(u:Transmision),(c:Car)-[]-(p:Puerta) where (c.cv < 200 and p.numero= 2 and c.year>2000 and  y.name<>"Large") return c,t.name,y.name,b.name,u.name,p.numero')
           .then(async results => {
 
             results.records.forEach(function (record) {
@@ -124,7 +124,7 @@ app.post("/edad", function (req, res) {
           })
 
       } else if (edad > 28 && edad <= 37) {
-        session.run('MATCH (c:Car)-[]-(t:Traccion),(c:Car)-[]-(y:Tamaño),(c:Car)-[]-(b:Brand),(c:Car)-[]-(u:Transmision),(c:Car)-[]-(p:Puerta) where (c.cv > 150 and c.cv < 300 and t.name<>"front wheel drive" and y.name<>"Compact") return c,t.name,y.name,b.name,u.name,p.numero')
+        session.run('MATCH (c:Car)-[]-(t:Traccion),(c:Car)-[]-(y:Tamano),(c:Car)-[]-(b:Brand),(c:Car)-[]-(u:Transmision),(c:Car)-[]-(p:Puerta) where (c.cv > 150 and c.cv < 300 and t.name<>"front wheel drive" and y.name<>"Compact") return c,t.name,y.name,b.name,u.name,p.numero')
           .then(async results => {
 
             results.records.forEach(function (record) {
@@ -142,7 +142,7 @@ app.post("/edad", function (req, res) {
           })
 
       } else if (edad > 37 && edad <= 60) {
-        session.run('MATCH (c:Car)-[]-(t:Traccion),(c:Car)-[]-(y:Tamaño),(c:Car)-[]-(b:Brand),(c:Car)-[]-(u:Transmision),(c:Car)-[]-(p:Puerta) where (c.cv > 150 and c.cv < 300 and  y.name="Large") return c,t.name,y.name,b.name,u.name,p.numero')
+        session.run('MATCH (c:Car)-[]-(t:Traccion),(c:Car)-[]-(y:Tamano),(c:Car)-[]-(b:Brand),(c:Car)-[]-(u:Transmision),(c:Car)-[]-(p:Puerta) where (c.cv > 150 and c.cv < 300 and  y.name="Large") return c,t.name,y.name,b.name,u.name,p.numero')
           .then(async results => {
 
             results.records.forEach(function (record) {
@@ -160,7 +160,7 @@ app.post("/edad", function (req, res) {
           })
 
       } else if (edad > 60) {
-        session.run('MATCH (c:Car)-[]-(t:Traccion),(c:Car)-[]-(y:Tamaño),(c:Car)-[]-(b:Brand),(c:Car)-[]-(u:Transmision),(c:Car)-[]-(p:Puerta) where (c.cv < 150 and u.name="AUTOMATIC") return c,t.name,y.name,b.name,u.name,p.numero')
+        session.run('MATCH (c:Car)-[]-(t:Traccion),(c:Car)-[]-(y:Tamano),(c:Car)-[]-(b:Brand),(c:Car)-[]-(u:Transmision),(c:Car)-[]-(p:Puerta) where (c.cv < 150 and u.name="AUTOMATIC") return c,t.name,y.name,b.name,u.name,p.numero')
           .then(async results => {
 
             results.records.forEach(function (record) {
@@ -190,7 +190,7 @@ app.post("/recomendacion", function (req, res) {
     cars: []
   }
   var email = req.body.email;
-  session.run('MATCH (ser:Usuario{email:"' + email + '"})-[:LIKES]-(a:Car)-[:LIKES]-(pep:Usuario)  Match (pep)-[:LIKES]-(c:Car) where not exists((ser)-[:LIKES]-(c)) with c MATCH (c:Car)-[]-(t:Traccion),(c:Car)-[]-(y:Tamaño),(c:Car)-[]-(b:Brand),(c:Car)-[]-(u:Transmision),(c:Car)-[]-(p:Puerta) return distinct c,t.name,y.name,b.name,u.name,p.numero')
+  session.run('MATCH (ser:Usuario{email:"' + email + '"})-[:LIKES]-(a:Car)-[:LIKES]-(pep:Usuario)  Match (pep)-[:LIKES]-(c:Car) where not exists((ser)-[:LIKES]-(c)) with c MATCH (c:Car)-[]-(t:Traccion),(c:Car)-[]-(y:Tamano),(c:Car)-[]-(b:Brand),(c:Car)-[]-(u:Transmision),(c:Car)-[]-(p:Puerta) return distinct c,t.name,y.name,b.name,u.name,p.numero')
     .then(results => {
       results.records.forEach(function (record) {
 
@@ -253,7 +253,7 @@ app.post("/recomendacion", function (req, res) {
 
 
               //ELIMINACION DE TAMAÑO
-              session.run('MATCH (ser:Usuario{email:"' + email + '"})-[:LIKES]-(a:Car)-[]-(p:Tamaño) where p.name="Compact" return count(p.name) union ALL MATCH (ser:Usuario{email:"' + email + '"})-[:LIKES]-(a:Car)-[]-(p:Tamaño) where p.name="Midsize" return count(p.name) union ALL MATCH (ser:Usuario{email:"' + email + '"})-[:LIKES]-(a:Car)-[]-(p:Tamaño) where p.name="Large" return count(p.name) union ALL MATCH (ser:Usuario{email:"' + email + '"})-[:LIKES]-(a:Car)-[]-(p:Tamaño) return count(p.name)')
+              session.run('MATCH (ser:Usuario{email:"' + email + '"})-[:LIKES]-(a:Car)-[]-(p:Tamano) where p.name="Compact" return count(p.name) union ALL MATCH (ser:Usuario{email:"' + email + '"})-[:LIKES]-(a:Car)-[]-(p:Tamano) where p.name="Midsize" return count(p.name) union ALL MATCH (ser:Usuario{email:"' + email + '"})-[:LIKES]-(a:Car)-[]-(p:Tamano) where p.name="Large" return count(p.name) union ALL MATCH (ser:Usuario{email:"' + email + '"})-[:LIKES]-(a:Car)-[]-(p:Tamano) return count(p.name)')
                 .then(results => {
                   //Elimina Midsize y Large
                   if ((results.records[0]._fields / results.records[3]._fields) > 0.55) {
